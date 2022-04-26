@@ -45,11 +45,10 @@ async def on_message(message):
           data.update({winner:1})
         else:
           data[winner]+=1
-        marklist = sorted(data.items(), key=lambda x:x[1], reverse=True)
-        sortdict= dict(marklist)
+        data = dict(sorted(data.items(), key=lambda x:x[1], reverse=True))
         # print(sortdict)
         lb.seek(0)
-        json.dump(sortdict,lb)
+        json.dump(data,lb)
       join_message_sent=False
       join_list={}
     else: 
