@@ -32,7 +32,7 @@ async def on_message(message):
     await asyncio.sleep(15)
     if len(join_list)>1:
       await message.channel.send('*Joining closed. {} joined \n To start a battle type* <:egg: Hristos a inviat>'.format(', '.join(x.mention for x in join_list)))
-      print(join_list.items())
+      # print(join_list.items())
       game_start=True
       b_phase=1
       while len(join_list)>1: await asyncio.sleep(5)
@@ -42,13 +42,12 @@ async def on_message(message):
       with open("leaderboard.json", "r+") as lb:
         data = json.load(lb)
         if winner not in data:
-          numesiscor={winner:1}
-          data.update(numesiscor)
+          data.update({winner:1})
         else:
           data[winner]+=1
         marklist = sorted(data.items(), key=lambda x:x[1], reverse=True)
         sortdict= dict(marklist)
-        print(sortdict)
+        # print(sortdict)
         lb.seek(0)
         json.dump(sortdict,lb)
       join_message_sent=False
@@ -63,12 +62,12 @@ async def on_message(message):
     who_said_hai=message.author
 
   elif message.content == "🥚 Hristos a inviat" or message.content == "🥚Hristos a inviat" or message.content == "🥚 Hristos a înviat" or message.content == "🥚Hristos a înviat" and game_start==True and b_phase==1 and message.author in join_list:
-    print(message.content)
+    # print(message.content)
     who_said_hai=message.author
     b_phase=2
     
   elif message.content == "🥚 Adevarat a inviat" or message.content == "🥚Adevarat a inviat" or message.content == "🥚 Adevărat a înviat" or message.content == "🥚Adevărat a înviat" and game_start==True and b_phase==2 and message.author in join_list:
-    print(message.content)
+    # print(message.content)
     if join_list[message.author] > join_list[who_said_hai]:
       await message.channel.send("{}'s egg brakes :(".format(who_said_hai.mention))
       join_list.pop(who_said_hai)
