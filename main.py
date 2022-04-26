@@ -25,7 +25,8 @@ async def on_message(message):
   
   if message.author == client.user:
     return
-    
+
+  #main process:
   elif message.content == '&ciocnitoua' and join_message_sent==False:
     await message.channel.send('**Show your :egg: to join the egg fight**')
     join_message_sent = True
