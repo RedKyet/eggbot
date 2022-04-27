@@ -82,14 +82,16 @@ async def on_message(message):
       eggs_broken[who_said_hai]+=1
       join_list.pop(message.author)
     else:
-      tmp=who_said_hai
-      who_said_hai=random.choice([who_said_hai, message.author])
-      await message.channel.send("{}'s egg brakes :(".format(who_said_hai.mention))
-      if who_said_hai==message.author:
-        eggs_broken[tmp]+=1
-      else:
+      print(join_list)
+      picked=random.choice([who_said_hai, message.author])
+      if picked==message.author:
+        await message.channel.send("{}'s egg brakes :(".format(who_said_hai.mention))
         eggs_broken[message.author]+=1
-      join_list.pop(who_said_hai)
+        join_list.pop(who_said_hai)
+      else:
+        await message.channel.send("{}'s egg brakes :(".format(message.author.mention))
+        eggs_broken[who_said_hai]+=1
+        join_list.pop(message.author)
     b_phase=1
   elif message.content == "&help":
     await message.channel.send("""*&ciocnitoua* pentru a initia un lobby
