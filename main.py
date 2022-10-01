@@ -3,7 +3,7 @@ import asyncio
 import discord
 import random
 import json
-distoken = os.environ['token']
+distoken = "OTY3ODM2MTUyMTgwNjU0MDkw.G_4QFK.M0CHZzSYjTFXU8eZrESvdZUHLARw9IAOwoZ8Ao"
 
 client=discord.Client()
 join_message_sent = False
