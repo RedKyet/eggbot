@@ -1,9 +1,11 @@
+from lib2to3.pgen2 import token
 from msilib.schema import Class
 import os
 import asyncio
 import discord
 import random
 import json
+from token import bot_token
 
 join_message_sent = False
 join_list={}
@@ -110,7 +112,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = MyClient(intents=intents)
-distoken = "OTY3ODM2MTUyMTgwNjU0MDkw.G_4QFK.M0CHZzSYjTFXU8eZrESvdZUHLARw9IAOwoZ8Ao"
+distoken = bot_token
 
 client.run(distoken)
 
