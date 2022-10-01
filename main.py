@@ -5,7 +5,9 @@ import asyncio
 import discord
 import random
 import json
-from token import bot_token
+
+#import token variable
+from token_for_bot import bot_token
 
 join_message_sent = False
 join_list={}
@@ -14,9 +16,12 @@ game_start=False
 b_phase=1
 
 class MyClient(discord.Client):
+
+  #check if bot started
   async def on_ready(self):
     print('Logged in as ', client.user)
 
+  #scan messages - main process
   async def on_message(self,message):
     global join_message_sent
     global join_list
@@ -25,21 +30,26 @@ class MyClient(discord.Client):
     global b_phase
     global eggs_broken
 
+    #do not reply if message is sent by bot
     if message.author == client.user:
-        return
+      return
 
-      #main process:
+    #scan messages for eggbot
     elif message.content == '&ciocnitoua' and join_message_sent==False:
+      
       await message.channel.send('**Show your :egg: to join the egg fight**')
       join_message_sent = True
       await asyncio.sleep(15)
+      
       if len(join_list)>1:
+        
         await message.channel.send('*Joining closed. {} joined \n To start a battle type* <:egg: Hristos a inviat>'.format(', '.join(x.mention for x in join_list)))
-        # print(join_list.items())
         game_start=True
         b_phase=1
         while len(join_list)>1: await asyncio.sleep(5)
         game_start=False
+        
+        #game end
         for x in join_list: winner=x.name
         for x in join_list: winner_tag=x
         await message.channel.send('**Game has ended. {} won {} pts**'.format(' '.join(x.mention for x in join_list), eggs_broken[winner_tag]))
@@ -50,14 +60,15 @@ class MyClient(discord.Client):
             else:
               data[winner]+=eggs_broken[winner_tag]
             data = dict(sorted(data.items(), key=lambda x:x[1], reverse=True))
-            # print(sortdict)
             lb.seek(0)
             json.dump(data,lb)
         join_message_sent=False
         join_list={}
         eggs_broken={}
+      
       else: 
           await message.channel.send('Nobody joined :(')
+          
           join_message_sent = False
           join_list={}
 
@@ -67,21 +78,22 @@ class MyClient(discord.Client):
         who_said_hai=message.author
 
     elif message.content == "🥚 Hristos a inviat" or message.content == "🥚Hristos a inviat" or message.content == "🥚 Hristos a înviat" or message.content == "🥚Hristos a înviat" and game_start==True and b_phase==1 and message.author in join_list:
-        # print(message.content)
       who_said_hai=message.author
       b_phase=2
       
     elif message.content == "🥚 Adevarat a inviat" or message.content == "🥚Adevarat a inviat" or message.content == "🥚 Adevărat a înviat" or message.content == "🥚Adevărat a înviat" and game_start==True and b_phase==2 and message.author in join_list:
-        # print(message.content)
-        if join_list[message.author] > join_list[who_said_hai]:
-          await message.channel.send("{}'s egg brakes :(".format(who_said_hai.mention))
-          eggs_broken[message.author]+=1
-          join_list.pop(who_said_hai)
-        elif join_list[message.author] < join_list[who_said_hai]:
+      
+      if join_list[message.author] > join_list[who_said_hai]:
+        await message.channel.send("{}'s egg brakes :(".format(who_said_hai.mention))
+        eggs_broken[message.author]+=1
+        join_list.pop(who_said_hai)
+      
+      elif join_list[message.author] < join_list[who_said_hai]:
           await message.channel.send("{}'s egg brakes :(".format(message.author.mention))
           eggs_broken[who_said_hai]+=1
           join_list.pop(message.author)
-        else:
+      
+      else:
           print(join_list)
           picked=random.choice([who_said_hai, message.author])
           if picked==message.author:
@@ -92,7 +104,8 @@ class MyClient(discord.Client):
             await message.channel.send("{}'s egg brakes :(".format(message.author.mention))
           eggs_broken[who_said_hai]+=1
           join_list.pop(message.author)
-        b_phase=1
+      b_phase=1
+    
     elif message.content == "&help":
         await message.channel.send("""*&ciocnitoua* pentru a initia un lobby
   Botul va astepta 15 secunde pentru mesaje "🥚"
@@ -108,6 +121,8 @@ class MyClient(discord.Client):
             embedVar.add_field(name=x, value=leaderboard[x], inline=False)
           await message.channel.send(embed=embedVar)
 
+
+
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -115,4 +130,3 @@ client = MyClient(intents=intents)
 distoken = bot_token
 
 client.run(distoken)
-
